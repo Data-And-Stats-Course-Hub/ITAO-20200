@@ -10,6 +10,6 @@ Passing_model <- lm(Win ~ Yds,            # Linear regression formula
                    data = nflpassing_r)   # Name of the dataset
 
 library(olsrr)
-source("https://www.crc.nd.edu/~jakosa/ITAO_20200/R_Guides/ols_regress_mod.R")
+source("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/ols_regress_mod.R")
 
 ols_regress_mod(Passing_model)
