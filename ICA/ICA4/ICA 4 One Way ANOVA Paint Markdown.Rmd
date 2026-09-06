@@ -1,0 +1,68 @@
+---
+title: "ICA 4: Paint Dry Time"
+output:
+  html_document:
+    highlight: haddock
+    theme: cerulean
+    toc: yes
+    toc_float: yes
+  word_document: default
+  pdf_document: default
+fontsize: 12pt
+linestretch: 1.15
+geometry: margin=0.5in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(show.signif.stars=FALSE)
+```
+```{r, echo = FALSE, warning = FALSE}
+PaintDrying <- read.csv("https://mendoza-stats.s3.amazonaws.com/paintdrying.csv")
+PaintDrying$Manufacturer <- factor(PaintDrying$Manufacturer,
+                                   levels = c(1, 2, 3, 4),
+                                   labels = c("Paint A", "Paint B",
+                                              "Paint C", "Paint D"))
+```
+
+# Summary Statistics
+```{r, warning = FALSE, message = FALSE}
+by(PaintDrying$DryTime, PaintDrying$Manufacturer, function(x) {
+  c(n      = length(x),
+    mean   = round(mean(x), 2),
+    sd     = round(sd(x), 2),
+    median = round(median(x), 2),
+    min    = min(x),
+    max    = max(x),
+    se     = round(sd(x) / sqrt(length(x)), 2))
+})
+```
+
+# ANOVA
+```{r, warning = FALSE, message = FALSE}
+PaintDrying.ANOVA <- aov(DryTime ~ Manufacturer, data = PaintDrying) 
+summary(PaintDrying.ANOVA) 
+```
+
+# Post-Hoc Analyses
+```{r}
+TukeyHSD(PaintDrying.ANOVA, conf.level = 0.95)  
+```
+<br>
+<br>
+```{r, warning = FALSE, message = FALSE}
+pairwise.t.test(PaintDrying$DryTime,        
+                PaintDrying$Manufacturer,        
+                p.adjust.method = "none",
+                alternative = "two.sided")  
+```
+<br>
+<br>
+```{r, warning = FALSE, message = FALSE}
+pairwise.t.test(PaintDrying$DryTime,        
+                PaintDrying$Manufacturer,        
+                p.adjust.method = "bonferroni",
+                alternative = "two.sided") 
+```
+
+
