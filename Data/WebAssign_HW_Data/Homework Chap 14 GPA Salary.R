@@ -7,38 +7,38 @@
 
 
 ## gpasalary_r1
-gpasalary_r1<- read.csv("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/gpasalary_r1.csv")
+gpasalary_r1<- read.csv("https://tinyurl.com/mr284674")
 Salary_model <- lm(Salary ~ GPA,          # Linear regression formula
                    data = gpasalary_r1)   # Name of the dataset
 library(olsrr)
-source("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/ols_regress_mod.R")
+source("https://tinyurl.com/4wjwzz4v")
 ols_regress_mod(Salary_model)
 
 
 ## gpasalary_r2
-gpasalary_r2<- read.csv("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/gpasalary_r2.csv")
+gpasalary_r2<- read.csv("https://tinyurl.com/bddapb39")
 Salary_model <- lm(Salary ~ GPA,          # Linear regression formula
                    data = gpasalary_r2)   # Name of the dataset
 library(olsrr)
-source("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/ols_regress_mod.R")
+source("https://tinyurl.com/4wjwzz4v")
 ols_regress_mod(Salary_model)
 
 
 
 ## gpasalary_r3
-gpasalary_r3<- read.csv("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/gpasalary_r3.csv")
+gpasalary_r3<- read.csv("https://tinyurl.com/3wn5tnyn")
 Salary_model <- lm(Salary ~ GPA,          # Linear regression formula
                    data = gpasalary_r3)   # Name of the dataset
 library(olsrr)
-source("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/ols_regress_mod.R")
+source("https://tinyurl.com/4wjwzz4v")
 ols_regress_mod(Salary_model)
 
 
 
 ## gpasalary_r4
-gpasalary_r4<- read.csv("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/gpasalary_r4.csv")
+gpasalary_r4<- read.csv("https://tinyurl.com/y4fh4dbs")
 Salary_model <- lm(Salary ~ GPA,          # Linear regression formula
                    data = gpasalary_r4)   # Name of the dataset
 library(olsrr)
-source("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/ols_regress_mod.R")
+source("https://tinyurl.com/4wjwzz4v")
 ols_regress_mod(Salary_model)
