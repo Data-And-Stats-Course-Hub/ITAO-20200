@@ -4,12 +4,12 @@
 
 # Paste all the code below into a script window and run it to perform the regression. 
 
-nflpassing_r<- read.csv("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/nflpassing_r.csv")
+nflpassing_r<- read.csv("https://tinyurl.com/9xjtrknw")
 
 Passing_model <- lm(Win ~ Yds,            # Linear regression formula
                    data = nflpassing_r)   # Name of the dataset
 
 library(olsrr)
-source("https://github.com/Data-And-Stats-Course-Hub/ITAO-20200/raw/refs/heads/main/Data/WebAssign_HW_Data/ols_regress_mod.R")
+source("https://tinyurl.com/4wjwzz4v")
 
 ols_regress_mod(Passing_model)
