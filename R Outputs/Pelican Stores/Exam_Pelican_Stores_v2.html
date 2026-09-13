@@ -11,7 +11,7 @@
 
 
 
-<title>Exam: Pelican Stores Descriptive Statistics</title>
+<title>Pelican Stores Descriptive Statistics</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -461,8 +461,7 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Exam: Pelican Stores Descriptive
-Statistics</h1>
+<h1 class="title toc-ignore">Pelican Stores Descriptive Statistics</h1>
 <h3 class="subtitle">ITAO 20200: Foundations of Statistics</h3>
 
 </div>
@@ -477,10 +476,10 @@ Statistics</h1>
 <pre><code>## 
 ## Promotional     Regular         Sum 
 ##          54          25          79</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">prop.table</span>(freq_TypeOfCustomer)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(freq_TypeOfCustomer), <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## 
 ## Promotional     Regular 
-##    0.683544    0.316456</code></pre>
+##      0.6835      0.3165</code></pre>
 </div>
 <div id="method-of-payment" class="section level3">
 <h3>Method of Payment</h3>
@@ -491,10 +490,10 @@ Statistics</h1>
 ##                2                4               13               54                6 
 ##              Sum 
 ##               79</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">prop.table</span>(freq_MethodOfPayment)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(freq_MethodOfPayment), <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## 
 ## American Express         Discover       MasterCard Proprietary Card             Visa 
-##        0.0253165        0.0506329        0.1645570        0.6835443        0.0759494</code></pre>
+##           0.0253           0.0506           0.1646           0.6835           0.0759</code></pre>
 </div>
 <div id="gender" class="section level3">
 <h3>Gender</h3>
@@ -503,10 +502,10 @@ Statistics</h1>
 <pre><code>## 
 ## Female   Male    Sum 
 ##     75      4     79</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">prop.table</span>(freq_Gender)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(freq_Gender), <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## 
-##    Female      Male 
-## 0.9493671 0.0506329</code></pre>
+## Female   Male 
+## 0.9494 0.0506</code></pre>
 </div>
 <div id="marital-status" class="section level3">
 <h3>Marital Status</h3>
@@ -515,14 +514,14 @@ Statistics</h1>
 <pre><code>## 
 ## Married  Single     Sum 
 ##      67      12      79</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">prop.table</span>(freq_MaritalStatus)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(freq_MaritalStatus), <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## 
-##  Married   Single 
-## 0.848101 0.151899</code></pre>
+## Married  Single 
+##  0.8481  0.1519</code></pre>
 </div>
 </div>
-<div id="joint-frequency-tables" class="section level2">
-<h2>Joint Frequency Tables</h2>
+<div id="crosstabulation-tables" class="section level2">
+<h2>Crosstabulation Tables</h2>
 <div id="type-of-customer-by-marital-status" class="section level3">
 <h3>Type of Customer by Marital Status</h3>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">addmargins</span>(<span class="fu">table</span>(Pelican<span class="sc">$</span>TypeOfCustomer, Pelican<span class="sc">$</span>MaritalStatus))</span></code></pre></div>
@@ -554,17 +553,17 @@ Statistics</h1>
 <span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>  <span class="at">Variance =</span> <span class="fu">var</span>(Pelican[[v]]),</span>
 <span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>  <span class="at">SD       =</span> <span class="fu">sd</span>(Pelican[[v]])</span>
 <span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>)))</span>
-<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="fu">round</span>(desc_stats, <span class="dv">4</span>)</span></code></pre></div>
-<pre><code>##             Mean Median  Variance      SD
-## Items     3.3671    2.0    8.6969  2.9490
-## NetSales 84.2244   65.2 3538.7499 59.4874
-## Age      42.2278   42.0  146.9731 12.1232</code></pre>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="fu">round</span>(desc_stats, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>##           Mean Median Variance    SD
+## Items     3.37    2.0     8.70  2.95
+## NetSales 84.22   65.2  3538.75 59.49
+## Age      42.23   42.0   146.97 12.12</code></pre>
 </div>
 <div id="mean-net-sales-by-group" class="section level2">
 <h2>Mean Net Sales by Group</h2>
 <div id="net-sales-by-method-of-payment" class="section level3">
 <h3>Net Sales by Method of Payment</h3>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">by</span>(Pelican<span class="sc">$</span>NetSales, Pelican<span class="sc">$</span>MethodOfPayment, mean)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">by</span>(Pelican<span class="sc">$</span>NetSales, Pelican<span class="sc">$</span>MethodOfPayment, <span class="cf">function</span>(x) <span class="fu">round</span>(<span class="fu">mean</span>(x), <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## Pelican$MethodOfPayment: American Express
 ## [1] 166
 ## --------------------------------------------------------------------------- 
@@ -572,22 +571,22 @@ Statistics</h1>
 ## [1] 60.25
 ## --------------------------------------------------------------------------- 
 ## Pelican$MethodOfPayment: MasterCard
-## [1] 67.8154
+## [1] 67.82
 ## --------------------------------------------------------------------------- 
 ## Pelican$MethodOfPayment: Proprietary Card
-## [1] 87.8561
+## [1] 87.86
 ## --------------------------------------------------------------------------- 
 ## Pelican$MethodOfPayment: Visa
-## [1] 75.8167</code></pre>
+## [1] 75.82</code></pre>
 </div>
 <div id="net-sales-by-gender" class="section level3">
 <h3>Net Sales by Gender</h3>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">by</span>(Pelican<span class="sc">$</span>NetSales, Pelican<span class="sc">$</span>Gender, mean)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">by</span>(Pelican<span class="sc">$</span>NetSales, Pelican<span class="sc">$</span>Gender, <span class="cf">function</span>(x) <span class="fu">round</span>(<span class="fu">mean</span>(x), <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## Pelican$Gender: Female
-## [1] 86.1844
+## [1] 86.18
 ## --------------------------------------------------------------------------- 
 ## Pelican$Gender: Male
-## [1] 47.475</code></pre>
+## [1] 47.48</code></pre>
 </div>
 </div>
 
