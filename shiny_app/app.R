@@ -10,18 +10,14 @@ invoices <- read.csv(
 
 
 # ============================================================
-# SETTINGS FOR THE ACTIVITY
+# SETTINGS
 # ============================================================
 
 sample_size <- 50
 confidence_level <- 0.95
 
-
-# ============================================================
-# IDENTIFY THE INVOICE AMOUNT VARIABLE
-# ============================================================
-
-# CHANGE THIS to the actual name of the invoice amount column
+# IMPORTANT:
+# Replace this with the actual name of the invoice amount column.
 amount_variable <- "invoices"
 
 
@@ -36,13 +32,13 @@ ui <- fluidPage(
   h3("Estimate the Population Mean"),
   
   p(
-    "You will repeatedly take a random sample of 50 invoices "
-    ,"from the population and calculate a 95% confidence interval "
-    ,"for the population mean invoice amount."
+    "Take repeated random samples of 50 invoices and "
+    ,"calculate a 95% confidence interval for the population "
+    ,"mean invoice amount."
   ),
   
   p(
-    strong("Your goal: "),
+    strong("Goal: "),
     "See how the confidence intervals change from sample to sample."
   ),
   
@@ -50,14 +46,13 @@ ui <- fluidPage(
   
   actionButton(
     "sample",
-    "Take a New Random Sample",
-    class = "btn-primary"
+    "Take a New Random Sample"
   ),
   
   br(),
   br(),
   
-  h4("Current Random Sample"),
+  h4("Current Sample"),
   
   textOutput("sample_number"),
   
@@ -71,11 +66,7 @@ ui <- fluidPage(
   
   br(),
   
-  tableOutput("sample_table"),
-  
-  hr(),
-  
-  h4("Confidence Intervals from Your Samples"),
+  h4("Your Samples"),
   
   tableOutput("results_table")
 )
@@ -85,9 +76,9 @@ ui <- fluidPage(
 # SERVER
 # ============================================================
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   
-  # Store results from all samples taken during this session
+  # Store results from all samples
   results <- reactiveVal(
     data.frame(
       Sample = integer(),
@@ -99,46 +90,49 @@ server <- function(input, output) {
   
   
   # ----------------------------------------------------------
-  # Generate a new sample whenever the button is clicked
+  # Take a random sample
   # ----------------------------------------------------------
   
   sampled_data <- eventReactive(input$sample, {
     
-    # Random sample of 50 invoices
-    sample_indices <- sample(
-      nrow(invoices),
-      size = sample_size,
-      replace = FALSE
-    )
-    
-    invoices[sample_indices, ]
+    invoices[
+      sample(
+        nrow(invoices),
+        size = sample_size,
+        replace = FALSE
+      ),
+    ]
     
   })
   
   
   # ----------------------------------------------------------
-  # Calculate the confidence interval
+  # Calculate confidence interval
   # ----------------------------------------------------------
   
   observeEvent(input$sample, {
     
     data <- sampled_data()
     
-    # Extract the invoice amounts
+    # Get invoice amounts
     x <- data[[amount_variable]]
     
-    # Remove missing values, if any
+    # Remove missing values
     x <- x[!is.na(x)]
     
-    # Sample statistics
+    # Sample size
     n <- length(x)
+    
+    # Sample mean
     xbar <- mean(x)
+    
+    # Sample standard deviation
     s <- sd(x)
     
     # Standard error
     se <- s / sqrt(n)
     
-    # Critical value for a t interval
+    # t critical value
     critical_value <- qt(
       1 - (1 - confidence_level) / 2,
       df = n - 1
@@ -151,9 +145,10 @@ server <- function(input, output) {
     lower <- xbar - margin_of_error
     upper <- xbar + margin_of_error
     
-    # Add the new result to the results table
+    # Previous results
     old_results <- results()
     
+    # New result
     new_result <- data.frame(
       Sample = nrow(old_results) + 1,
       Sample_Mean = xbar,
@@ -161,6 +156,7 @@ server <- function(input, output) {
       Upper = upper
     )
     
+    # Save result
     results(
       rbind(
         old_results,
@@ -172,7 +168,7 @@ server <- function(input, output) {
   
   
   # ----------------------------------------------------------
-  # Display sample number
+  # Sample information
   # ----------------------------------------------------------
   
   output$sample_number <- renderText({
@@ -188,7 +184,7 @@ server <- function(input, output) {
   
   
   # ----------------------------------------------------------
-  # Display sample mean
+  # Sample mean
   # ----------------------------------------------------------
   
   output$sample_mean <- renderText({
@@ -196,18 +192,24 @@ server <- function(input, output) {
     req(sampled_data())
     
     x <- sampled_data()[[amount_variable]]
+    
     x <- x[!is.na(x)]
     
     paste(
-      "Sample mean:",
-      dollar(mean(x))
+      "Sample mean: $",
+      format(
+        mean(x),
+        big.mark = ",",
+        digits = 2,
+        nsmall = 2
+      )
     )
     
   })
   
   
   # ----------------------------------------------------------
-  # Display confidence interval
+  # Confidence interval
   # ----------------------------------------------------------
   
   output$confidence_interval <- renderText({
@@ -216,33 +218,32 @@ server <- function(input, output) {
     
     req(nrow(current_results) > 0)
     
-    current <- current_results[nrow(current_results), ]
+    current <- current_results[
+      nrow(current_results),
+    ]
     
     paste(
-      "95% CI:",
-      dollar(current$Lower),
-      "to",
-      dollar(current$Upper)
+      "95% CI: $",
+      format(
+        current$Lower,
+        big.mark = ",",
+        digits = 2,
+        nsmall = 2
+      ),
+      "to $",
+      format(
+        current$Upper,
+        big.mark = ",",
+        digits = 2,
+        nsmall = 2
+      )
     )
     
   })
   
   
   # ----------------------------------------------------------
-  # Display first 10 observations from current sample
-  # ----------------------------------------------------------
-  
-  output$sample_table <- renderTable({
-    
-    req(sampled_data())
-    
-    head(sampled_data(), 10)
-    
-  })
-  
-  
-  # ----------------------------------------------------------
-  # Display all confidence intervals generated so far
+  # Display all intervals
   # ----------------------------------------------------------
   
   output$results_table <- renderTable({
@@ -253,16 +254,34 @@ server <- function(input, output) {
     
     display_results <- current_results
     
-    display_results$Sample_Mean <- dollar(
-      display_results$Sample_Mean
+    display_results$Sample_Mean <- paste0(
+      "$",
+      format(
+        display_results$Sample_Mean,
+        big.mark = ",",
+        digits = 2,
+        nsmall = 2
+      )
     )
     
-    display_results$Lower <- dollar(
-      display_results$Lower
+    display_results$Lower <- paste0(
+      "$",
+      format(
+        display_results$Lower,
+        big.mark = ",",
+        digits = 2,
+        nsmall = 2
+      )
     )
     
-    display_results$Upper <- dollar(
-      display_results$Upper
+    display_results$Upper <- paste0(
+      "$",
+      format(
+        display_results$Upper,
+        big.mark = ",",
+        digits = 2,
+        nsmall = 2
+      )
     )
     
     names(display_results) <- c(
@@ -280,7 +299,7 @@ server <- function(input, output) {
 
 
 # ============================================================
-# RUN THE APP
+# RUN APP
 # ============================================================
 
 shinyApp(
