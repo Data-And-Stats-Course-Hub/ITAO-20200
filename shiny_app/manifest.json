@@ -1,1 +1,13 @@
+{
+  "version": 1,
+  "metadata": {
+    "appmode": "shiny"
+  },
+  "packages": [
+    {
+      "name": "shiny",
+      "source": "CRAN"
+    }
+  ]
+}
 
