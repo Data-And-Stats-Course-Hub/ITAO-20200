@@ -210,8 +210,7 @@ ui <- fluidPage(
     h1("CaterCo Invoice Audit"),
     
     p(
-      "Can a random sample of invoices help you evaluate CaterCo's claim ",
-      "that the average event costs $750?"
+      "Can a random sample of invoices help you evaluate CaterCo's claim?"
     )
   ),
   
