@@ -28,7 +28,7 @@ t.test(Grades$Pretest,            # the variable we are testing
        conf.level = 0.95)         # the confidence level = 1 - alpha
 
 # The "alternative" argument controls which test you're running:
-#   alternative = "less"      -> lower-tailed test   (Ha: mu < 70)
+#   alternative = "less"      -> lower-tailed test    (Ha: mu < 70)
 #   alternative = "greater"   -> upper-tailed test    (Ha: mu > 70)
 #   alternative = "two.sided" -> two-tailed test      (Ha: mu != 70)
 
@@ -77,3 +77,8 @@ t.test(Grades$Midterm, Grades$Final,   # the variables we are testing
        mu = 0,                         # the null (or test) value
        conf.level = 0.95,              # the confidence level = 1 - alpha
        paired = TRUE)                  # this indicates that it's a paired t test
+
+# The "alternative" argument controls which test you're running:
+#   alternative = "less"      -> lower-tailed test    (Ha: mu < 70)
+#   alternative = "greater"   -> upper-tailed test    (Ha: mu > 70)
+#   alternative = "two.sided" -> two-tailed test      (Ha: mu != 70)
