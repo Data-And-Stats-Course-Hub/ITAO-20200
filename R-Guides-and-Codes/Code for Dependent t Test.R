@@ -50,6 +50,7 @@ t.test(Grades$Midterm, Grades$Final,   # the variables we are testing
        conf.level = 0.95,              # the confidence level = 1 - alpha
        paired = TRUE)                  # this indicates that it's a paired t test
 
+
 # The "alternative" argument controls which test you're running:
 #   alternative = "less"      -> lower-tailed test    (Ha: mu < 0)
 #   alternative = "greater"   -> upper-tailed test    (Ha: mu > 0)
