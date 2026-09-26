@@ -69,3 +69,9 @@ t.test(bank$Salary ~ bank$Gender,    # variables tested (depen. ~ indep.)
        mu = 0,                       # the null (or test) value
        conf.level = 0.95,            # confidence level = 1 - alpha
        var.equal = TRUE)             # TRUE = assumes equal variances
+
+
+# The "alternative" argument controls which test you're running:
+#   alternative = "less"      -> lower-tailed test    (Ha: mu < 0)
+#   alternative = "greater"   -> upper-tailed test    (Ha: mu > 0)
+#   alternative = "two.sided" -> two-tailed test      (Ha: mu != 0)
