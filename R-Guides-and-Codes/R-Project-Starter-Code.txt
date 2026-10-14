@@ -48,7 +48,7 @@ library(car)
 ## END OF THE PROVIDED CODE. Do not change or copy anything above this line.  ##
 ##                                                                            ##
 ## Refer to the R Coding Project Instructional Guide for the details of each  ##
-## of the following analyses. If you do not read and follow the guide, you   ##
+## of the following analyses. If you do not read and follow the guide, you    ##
 ## may run some analyses incorrectly.                                         ##
 ##============================================================================##
 
