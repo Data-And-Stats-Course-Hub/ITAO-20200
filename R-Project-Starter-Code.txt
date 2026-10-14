@@ -1,0 +1,189 @@
+################################################################################
+#### R Coding Project -- Starter Code                                       ####
+################################################################################
+
+## The read.csv command below imports the `digital` data frame into R.
+## You should see digital in the Global Environment pane with 298 observations
+## of 31 variables. Select and run lines 1-45 one time only.
+
+digital <- read.csv("https://data-and-stats-course-hub.github.io/ITAO-20200/Data/2025_Digital_Literacy.csv")
+
+##########################################
+#### Data Management                  ####
+##########################################
+
+## Shorten a few variable names
+digital$Collaboration <- digital$Participating_in_realtime_discussion_or_collaborative_documents
+digital$SearchInternet <- digital$Searching_for_information_on_the_Internet
+digital$WordProcessing <- digital$Working_with_word_processing_applications_Word_Google_Docs
+
+## Make certain variables into factors
+digital$Gender <- as.factor(digital$Gender)
+digital$Age <- as.factor(digital$Age)
+digital$Education <- as.factor(digital$Highest_level_of_education)
+digital$Income <- as.factor(digital$Annual_household_income)
+
+## Put the Education and Income groups in a logical order
+digital$Education <- factor(
+  digital$Education,
+  levels = c("HS diploma, GED, or less",
+             "Some college",
+             "Associate's degree",
+             "Bachelor's degree",
+             "Master's degree or higher"))
+
+digital$Income <- factor(
+  digital$Income,
+  levels = c("Under $15,000","$15,000 to $29,999",
+             "$30,000 to $59,999","$60,000 to $99,999 ",
+             "$100,000 to $124,999","$125,000 or more"))
+
+#===============================================================================
+# Package needed for this project (Levene's test)                             #
+#===============================================================================
+
+library(car)
+
+##============================================================================##
+## END OF THE PROVIDED CODE. Do not change or copy anything above this line.  ##
+##                                                                            ##
+## Refer to the R Coding Project Instructional Guide for the details of each  ##
+## of the following analyses. If you do not read and follow the guide, you   ##
+## may run some analyses incorrectly.                                         ##
+##============================================================================##
+
+#===============================================================================
+# 1. Descriptive statistics
+#    For each variable, generate the sample size (n), mean, and standard
+#    deviation using the base R commands shown in the instructional guide.
+#    Write your code in the blank spaces below.
+#===============================================================================
+
+# Use the `c()` command to generate descriptive statistics
+# for the variable digital$Collaboration
+
+
+
+# Use the `c()` command to generate descriptive statistics
+# for the variable digital$Using_safe_online_practices_privacy_and_security
+
+
+
+# Use the `by()` command to generate descriptive statistics
+# for the variable digital$SearchInternet by digital$Gender
+
+
+
+# Use the `by()` command to generate descriptive statistics
+# for the variable digital$Online_shopping by digital$Income
+
+
+
+# Use the `by()` command to generate descriptive statistics
+# for the variable digital$WordProcessing by digital$Education
+
+
+
+# Use the `by()` command to generate descriptive statistics
+# for the variable digital$Total_Percent_Score by digital$Age
+
+
+
+
+#===============================================================================
+# 2. Single sample t test for digital$Collaboration
+#    The null value and the tail of the test are given in the instructional
+#    guide. Write your code in the blank space below.
+#===============================================================================
+
+
+
+
+
+#===============================================================================
+# 3. Single sample t test for
+#    digital$Using_safe_online_practices_privacy_and_security
+#    The null value and the tail of the test are given in the instructional
+#    guide. Write your code in the blank space below.
+#===============================================================================
+
+
+
+
+
+#===============================================================================
+# 4. Independent t test for digital$SearchInternet by digital$Gender
+#    Run Levene's test for equality of variances first, then use its result
+#    to choose the correct version of the t test. The tail of the test is
+#    given in the instructional guide. Write your code in the blank spaces
+#    below.
+#===============================================================================
+
+## Levene's test for equality of variances
+
+
+
+
+## Independent t test
+
+
+
+
+
+#===============================================================================
+# 5. One-way ANOVA for digital$Online_shopping by digital$Income
+#    Income has already been made into a factor in the provided code above.
+#    Write your code in the blank spaces below.
+#===============================================================================
+
+## One-way ANOVA
+
+
+
+
+## Post-hoc analysis using Tukey's HSD
+## (run this analysis even if the ANOVA is not significant)
+
+
+
+
+#===============================================================================
+# 6. One-way ANOVA for digital$WordProcessing by digital$Education
+#    Education has already been made into a factor in the provided code above.
+#    Write your code in the blank spaces below.
+#===============================================================================
+
+## One-way ANOVA
+
+
+
+
+## Post-hoc analysis using the Bonferroni-adjusted LSD
+## (run this analysis even if the ANOVA is not significant)
+
+
+
+
+#===============================================================================
+# 7. One-way ANOVA for digital$Total_Percent_Score by digital$Age
+#    Age has already been made into a factor in the provided code above.
+#    Write your code in the blank spaces below.
+#===============================================================================
+
+## One-way ANOVA
+
+
+
+
+## Post-hoc analysis using the unadjusted Fisher's LSD
+## (run this analysis even if the ANOVA is not significant)
+
+
+
+
+##----------------------------------------------------------------------------##
+##  Compile your report. Follow the instructions at the end of the            ##
+##  instructional guide. Upload your compiled report (the .html file), not    ##
+##  this code file, to Canvas. If you do not upload your compiled report,     ##
+##  your score on the coding project will be reduced.                         ##
+##----------------------------------------------------------------------------##
