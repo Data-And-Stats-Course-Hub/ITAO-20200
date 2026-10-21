@@ -16,6 +16,7 @@ digital <- read.csv("https://data-and-stats-course-hub.github.io/ITAO-20200/Data
 digital$Collaboration <- digital$Participating_in_realtime_discussion_or_collaborative_documents
 digital$SearchInternet <- digital$Searching_for_information_on_the_Internet
 digital$WordProcessing <- digital$Working_with_word_processing_applications_Word_Google_Docs
+digital$Using_safe_online_practices_privacy_and_security <- digital$Safe_online_practices
 
 ## Make certain variables into factors
 digital$Gender <- as.factor(digital$Gender)
@@ -65,7 +66,7 @@ library(car)
 
 
 # Use the `c()` command to generate descriptive statistics
-# for the variable digital$Using_safe_online_practices_privacy_and_security
+# for the variable digital$Safe_online_practices
 
 
 
@@ -102,7 +103,7 @@ library(car)
 
 #===============================================================================
 # 3. Single sample t test for
-#    digital$Using_safe_online_practices_privacy_and_security
+#    digital$Safe_online_practices
 #    The null value and the tail of the test are given in the instructional
 #    guide. Write your code in the blank space below.
 #===============================================================================
