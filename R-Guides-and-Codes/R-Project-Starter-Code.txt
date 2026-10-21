@@ -16,7 +16,7 @@ digital <- read.csv("https://data-and-stats-course-hub.github.io/ITAO-20200/Data
 digital$Collaboration <- digital$Participating_in_realtime_discussion_or_collaborative_documents
 digital$SearchInternet <- digital$Searching_for_information_on_the_Internet
 digital$WordProcessing <- digital$Working_with_word_processing_applications_Word_Google_Docs
-digital$Using_safe_online_practices_privacy_and_security <- digital$Safe_online_practices
+digital$Safe_online_practices <- digital$Using_safe_online_practices_privacy_and_security
 
 ## Make certain variables into factors
 digital$Gender <- as.factor(digital$Gender)
