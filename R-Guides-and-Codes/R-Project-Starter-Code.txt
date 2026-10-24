@@ -4,7 +4,7 @@
 
 ## The read.csv command below imports the `digital` data frame into R.
 ## You should see digital in the Global Environment pane with 298 observations
-## of 31 variables. Select and run lines 1-46 one time only.
+## on over 30 variables. Select and run lines 1-46 one time only.
 
 digital <- read.csv("https://data-and-stats-course-hub.github.io/ITAO-20200/Data/2025_Digital_Literacy.csv")
 
