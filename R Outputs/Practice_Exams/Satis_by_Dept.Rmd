@@ -17,9 +17,16 @@ library(readr)
 Prac_DeptSatis <- read_csv("G:/Shared drives/Foundations of Statistics, Spring 2023 and beyond/Exams/Exam 2/Prac_DeptSatis.csv")
 ```
 
-```{r warning=FALSE, message=FALSE}
-library(psych)
-describeBy(Prac_DeptSatis$Satis, Prac_DeptSatis$Type, fast = TRUE)
+```{r}
+by(Prac_DeptSatis$Satis, Prac_DeptSatis$Type, function(x) {
+  c(n      = length(x),
+    mean   = round(mean(x), 2),
+    sd     = round(sd(x), 2),
+    median = round(median(x), 2),
+    min    = min(x),
+    max    = max(x),
+    se     = round(sd(x) / sqrt(length(x)), 2))
+})
 ```
 
 ```{r warning=FALSE, message=FALSE}
