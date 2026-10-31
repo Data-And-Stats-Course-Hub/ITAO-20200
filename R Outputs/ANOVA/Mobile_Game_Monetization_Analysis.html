@@ -444,28 +444,28 @@ display: none;
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>})</span></code></pre></div>
 <pre><code>## game$offer: Offer A
 ##      n   mean     sd median    min    max     se 
-##  30.00  12.42   2.88  11.88   5.92  19.42   0.52 
+##  25.00  12.56   3.12  13.38   6.93  19.06   0.62 
 ## ------------------------------------------------------------------- 
 ## game$offer: Offer B
 ##      n   mean     sd median    min    max     se 
-##  25.00  13.77   3.14  13.82   8.14  21.27   0.63 
+##  30.00  12.97   4.04  12.79   3.59  19.66   0.74 
 ## ------------------------------------------------------------------- 
 ## game$offer: Offer C
 ##      n   mean     sd median    min    max     se 
-##  26.00  14.60   4.21  15.76   6.53  21.91   0.83 
+##  30.00  14.31   4.79  13.73   6.13  24.13   0.88 
 ## ------------------------------------------------------------------- 
 ## game$offer: Offer D
 ##      n   mean     sd median    min    max     se 
-##  27.00  15.54   3.78  15.39   8.28  21.88   0.73 
+##  27.00  15.76   3.45  16.04   8.90  22.84   0.66 
 ## ------------------------------------------------------------------- 
 ## game$offer: Offer E
 ##      n   mean     sd median    min    max     se 
-##  29.00  15.09   4.93  15.07   5.37  24.52   0.92</code></pre>
+##  28.00  15.45   3.84  15.42   5.36  21.72   0.73</code></pre>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>game_ANOVA <span class="ot">&lt;-</span> <span class="fu">aov</span>(spending <span class="sc">~</span> offer, <span class="at">data =</span> game)</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">summary</span>(game_ANOVA)</span></code></pre></div>
 <pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)
-## offer         4    175    43.8    2.93  0.023
-## Residuals   132   1971    14.9</code></pre>
+## offer         4    222    55.6     3.6  0.008
+## Residuals   135   2084    15.4</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">pairwise.t.test</span>(game<span class="sc">$</span>spending, game<span class="sc">$</span>offer,</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                <span class="at">p.adjust.method =</span> <span class="st">&quot;none&quot;</span>, <span class="at">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</span></code></pre></div>
 <pre><code>## 
@@ -474,10 +474,10 @@ display: none;
 ## data:  game$spending and game$offer 
 ## 
 ##         Offer A Offer B Offer C Offer D
-## Offer B 0.199   -       -       -      
-## Offer C 0.037   0.445   -       -      
-## Offer D 0.003   0.101   0.377   -      
-## Offer E 0.009   0.212   0.637   0.665  
+## Offer B 0.705   -       -       -      
+## Offer C 0.104   0.189   -       -      
+## Offer D 0.004   0.008   0.165   -      
+## Offer E 0.009   0.018   0.270   0.768  
 ## 
 ## P value adjustment method: none</code></pre>
 
