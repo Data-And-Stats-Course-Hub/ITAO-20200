@@ -1,0 +1,32 @@
+---
+title: "Coffee Bag Fill Weights"
+author: "JRW"
+date: "2026-10-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', out.width = '80%')
+options(width = 90)
+```
+
+```{r echo=FALSE}
+Coffee <- read.csv("Coffee_Fill.csv")
+```
+
+```{r}
+c(n      = length(Coffee$Weight),
+  mean   = round(mean(Coffee$Weight), 2),
+  sd     = round(sd(Coffee$Weight), 2),
+  median = round(median(Coffee$Weight), 2),
+  min    = min(Coffee$Weight),
+  max    = max(Coffee$Weight),
+  se     = round(sd(Coffee$Weight) / sqrt(length(Coffee$Weight)), 2))
+```
+
+```{r}
+t.test(Coffee$Weight,
+       alternative = "two.sided",
+       mu = 340,
+       conf.level = 0.95)
+```
