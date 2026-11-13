@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where Does the Variation Go? SST, SSR, and SSE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0C2340; --gold:#AE9142; --goldl:#F3EBD3; --bg:#F7F5F0; --card:#FFFFFF;
+    --sst:#0C2340; --ssr:#2E8B57; --sse:#E87722; --line:#E00000; --pt:#3B6EA8; --gray:#6B7280; --ink:#1F2937;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:1400px;margin:0 auto;padding:22px 26px 28px}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  h1{margin:0;font-size:clamp(22px,2.6vw,34px);color:var(--navy);line-height:1.15}
+  h1 span{color:var(--gold)}
+  .sub{margin:4px 0 0;color:var(--gray);font-size:clamp(13px,1.2vw,16px)}
+  .seg{display:inline-flex;background:#ECE8DD;border-radius:999px;padding:4px}
+  .seg button{border:0;background:transparent;font:inherit;font-size:14px;font-weight:600;color:var(--navy);padding:7px 14px;border-radius:999px;cursor:pointer}
+  .seg button.on{background:var(--navy);color:#fff}
+  .grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);gap:20px}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:18px;box-shadow:0 6px 22px rgba(12,35,64,.10);padding:16px 18px}
+  svg{width:100%;height:auto;display:block}
+  .controls{margin-top:12px}
+  .sliderRow{display:flex;align-items:center;gap:14px}
+  .sliderRow label{font-weight:700;color:var(--navy);white-space:nowrap}
+  input[type=range]{flex:1;accent-color:var(--navy);height:28px}
+  .rval{font-weight:700;font-size:22px;color:var(--navy);min-width:92px;text-align:right;font-variant-numeric:tabular-nums}
+  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .btn{border:2px solid var(--navy);background:#fff;color:var(--navy);font:inherit;font-weight:600;font-size:14px;padding:8px 14px;border-radius:12px;cursor:pointer}
+  .btn:hover{background:#F1F3F7}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.gold{border-color:var(--gold);background:var(--gold);color:#fff}
+  .btn small{font-weight:500;opacity:.85}
+  .toggles{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:14px}
+  .toggles label{display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600}
+  .chip{display:inline-block;width:14px;height:14px;border-radius:4px}
+  .readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat{border-radius:14px;padding:10px 12px;color:#fff}
+  .stat .k{font-size:13px;font-weight:600;opacity:.9}
+  .stat .v{font-size:clamp(22px,2.2vw,30px);font-weight:700;font-variant-numeric:tabular-nums}
+  .stat .d{font-size:12px;opacity:.9}
+  .bars{margin-top:16px}
+  .barLabel{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--gray);margin:10px 0 4px}
+  .bar{height:34px;border-radius:10px;overflow:hidden;display:flex;background:#EEE}
+  .bar div{height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;white-space:nowrap;transition:none}
+  .rbox{display:flex;gap:10px;margin-top:16px}
+  .rbox .card2{flex:1;background:var(--goldl);border:2px solid var(--gold);border-radius:14px;padding:10px 12px}
+  .rbox .k{font-size:13px;font-weight:600;color:var(--navy)}
+  .rbox .v{font-size:28px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+  .callout{margin-top:16px;border-radius:14px;padding:14px 16px;background:var(--navy);color:#fff;min-height:112px}
+  .callout .h{font-size:clamp(18px,1.7vw,22px);font-weight:700;margin-bottom:4px}
+  .callout .t{font-size:15px;line-height:1.45;opacity:.95}
+  .eq{margin-top:10px;font-size:15px;color:var(--gray)}
+  .eq b{color:var(--line)}
+  .keys{margin-top:10px;font-size:12.5px;color:var(--gray)}
+  kbd{background:#fff;border:1px solid #D1D5DB;border-bottom-width:2px;border-radius:5px;padding:0 5px;font-family:inherit;font-size:12px}
+  .axis text{font-size:14px;fill:var(--gray)}
+  .axTitle{font-size:16px;fill:var(--navy);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Where Does the Variation Go? <span>SST = SSR + SSE</span></h1>
+      <p class="sub">Move the points and watch the total variation (SST) split between what the line explains (SSR) and what it misses (SSE). What kind of relationship do you see at each extreme?</p>
+    </div>
+    <div class="seg" role="group" aria-label="Data set">
+      <button id="dsStress" class="on">Managers' stress (n = 5)</button>
+      <button id="dsBig">Larger sample (n = 20)</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <svg id="plot" viewBox="0 0 760 500" role="img" aria-label="Scatterplot with regression line and squared-gap segments"></svg>
+      <div class="controls">
+        <div class="sliderRow">
+          <label for="r">Move the points</label>
+          <input id="r" type="range" min="-1" max="1" step="0.005" value="0.875">
+          <div class="rval" id="rval"></div>
+        </div>
+        <div class="btns">
+          <button class="btn" data-r="0">SST = SSE</button>
+          <button class="btn gold" data-r="data">Our data <small>(r = 0.88)</small></button>
+          <button class="btn" data-r="1">SST = SSR <small>↗</small></button>
+          <button class="btn" data-r="-1">SST = SSR <small>↘</small></button>
+          <button class="btn primary" id="play">▶ Play the story</button>
+          <button class="btn" id="reveal">👁 Reveal r</button>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tSST" checked><span class="chip" style="background:var(--sst)"></span>SST gaps (y − ȳ)</label>
+          <label><input type="checkbox" id="tSSR" checked><span class="chip" style="background:var(--ssr)"></span>SSR gaps (ŷ − ȳ)</label>
+          <label><input type="checkbox" id="tSSE" checked><span class="chip" style="background:var(--sse)"></span>SSE gaps (y − ŷ)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="readouts">
+        <div class="stat" style="background:var(--sst)"><div class="k">SST · Total</div><div class="v" id="vSST">–</div><div class="d">Σ(y − ȳ)²</div></div>
+        <div class="stat" style="background:var(--ssr)"><div class="k">SSR · Explained</div><div class="v" id="vSSR">–</div><div class="d">Σ(ŷ − ȳ)²</div></div>
+        <div class="stat" style="background:var(--sse)"><div class="k">SSE · Unexplained</div><div class="v" id="vSSE">–</div><div class="d">Σ(y − ŷ)²</div></div>
+      </div>
+
+      <div class="bars">
+        <div class="barLabel"><span>SST (total variation)</span><span id="bSSTlab"></span></div>
+        <div class="bar"><div style="width:100%;background:var(--sst)">100%</div></div>
+        <div class="barLabel"><span>= SSR + SSE</span><span></span></div>
+        <div class="bar"><div id="bSSR" style="background:var(--ssr)"></div><div id="bSSE" style="background:var(--sse)"></div></div>
+      </div>
+
+      <div class="rbox" id="rbox" hidden>
+        <div class="card2"><div class="k">r</div><div class="v" id="vR">–</div></div>
+        <div class="card2"><div class="k">r² = SSR / SST</div><div class="v" id="vR2">–</div></div>
+      </div>
+
+      <div class="callout"><div class="h" id="cH"></div><div class="t" id="cT"></div></div>
+      <div class="eq" id="eqWrap" hidden>Fitted line: <b id="eqn"></b></div>
+      <div class="keys">Keys: <kbd>E</kbd> SST = SSE · <kbd>D</kbd> our data · <kbd>R</kbd> SST = SSR ↗ · <kbd>F</kbd> SST = SSR ↘ · <kbd>Space</kbd> play/stop · <kbd>←</kbd><kbd>→</kbd> nudge · <kbd>V</kbd> reveal r</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---------- data sets ----------
+  // Each data set is built so that, for any r, the sample correlation is exactly r
+  // and ybar and SST stay fixed: y = ybar + sqrt(SST) * ( r*z + sqrt(1-r^2)*e ),
+  // where z = standardized x (unit sum of squares) and e = unit-SS noise orthogonal to x.
+  function mean(a){return a.reduce((s,v)=>s+v,0)/a.length}
+  function build(x, yRef, SST, ybar){
+    const xb=mean(x), SSx=x.reduce((s,v)=>s+(v-xb)**2,0);
+    const z=x.map(v=>(v-xb)/Math.sqrt(SSx));
+    // residualize yRef on x to get noise orthogonal to x
+    const yb=mean(yRef);
+    const b=x.reduce((s,v,i)=>s+(v-xb)*(yRef[i]-yb),0)/SSx;
+    let e=yRef.map((v,i)=>(v-yb)-b*(x[i]-xb));
+    const SSe=e.reduce((s,v)=>s+v*v,0); e=e.map(v=>v/Math.sqrt(SSe));
+    return {x,z,e,xb,SSx,SST,ybar};
+  }
+  // Managers' stress data (from the slides): reproduces the real data exactly at r = 27/sqrt(28*34)
+  const stressX=[6,8,3,10,8], stressY=[7,8,1,8,6];
+  const rData=27/Math.sqrt(28*34); // 0.8748
+  const STRESS=Object.assign(build(stressX,stressY,34,6),{xlab:"Employees Supervised",ylab:"Stress Level",xmin:2,xmax:11,ymin:0,ymax:11,name:"stress"});
+  // Larger sample: fixed pseudo-random noise (seeded) so the animation is repeatable
+  function rng(seed){return function(){seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296}}
+  const R=rng(7), bigX=[], bigN=[];
+  for(let i=0;i<20;i++){ bigX.push(+(2.3+i*0.4+ (R()-0.5)*0.35).toFixed(2)); }
+  for(let i=0;i<20;i++){ const u1=R()||1e-9,u2=R(); bigN.push(Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2)); }
+  const BIG=Object.assign(build(bigX,bigN,70,6),{xlab:"x",ylab:"y",xmin:1.5,xmax:11,ymin:0,ymax:12,name:"big"});
+
+  let D=STRESS;
+  let revealed=false;
+  let r=rData;
+
+  // ---------- svg ----------
+  const svg=document.getElementById('plot');
+  const W=760,H=500,M={l:70,r:30,t:24,b:62};
+  const NS="http://www.w3.org/2000/svg";
+  function el(tag,attrs,parent){const n=document.createElementNS(NS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);(parent||svg).appendChild(n);return n}
+  let gAxis,gGaps,gLines,gPts,yBarLine,yBarLab,regLine,regLab;
+  function sx(v){return M.l+(v-D.xmin)/(D.xmax-D.xmin)*(W-M.l-M.r)}
+  function sy(v){return H-M.b-(v-D.ymin)/(D.ymax-D.ymin)*(H-M.t-M.b)}
+
+  function drawStatic(){
+    svg.innerHTML="";
+    gAxis=el('g',{class:'axis'});
+    // grid + ticks
+    for(let v=Math.ceil(D.ymin);v<=D.ymax;v+=2){
+      el('line',{x1:M.l,x2:W-M.r,y1:sy(v),y2:sy(v),stroke:'#EEF0F3'},gAxis);
+      const t=el('text',{x:M.l-10,y:sy(v)+5,'text-anchor':'end'},gAxis);t.textContent=v;
+    }
+    for(let v=Math.ceil(D.xmin);v<=D.xmax;v+=1){
+      const t=el('text',{x:sx(v),y:H-M.b+22,'text-anchor':'middle'},gAxis);t.textContent=v;
+    }
+    el('line',{x1:M.l,x2:W-M.r,y1:H-M.b,y2:H-M.b,stroke:'#9CA3AF','stroke-width':1.5},gAxis);
+    el('line',{x1:M.l,x2:M.l,y1:M.t,y2:H-M.b,stroke:'#9CA3AF','stroke-width':1.5},gAxis);
+    const xt=el('text',{x:(M.l+W-M.r)/2,y:H-14,'text-anchor':'middle',class:'axTitle'},gAxis);xt.textContent=D.xlab;
+    const yt=el('text',{x:18,y:(M.t+H-M.b)/2,'text-anchor':'middle',class:'axTitle',transform:`rotate(-90 18 ${(M.t+H-M.b)/2})`},gAxis);yt.textContent=D.ylab;
+    // ybar line
+    yBarLine=el('line',{x1:M.l,x2:W-M.r,y1:sy(D.ybar),y2:sy(D.ybar),stroke:'var(--gray)','stroke-width':2,'stroke-dasharray':'7 6'});
+    yBarLab=el('text',{x:W-M.r-4,y:sy(D.ybar)-8,'text-anchor':'end','font-size':16,fill:'var(--gray)','font-weight':600});yBarLab.textContent='ȳ = '+D.ybar;
+    gGaps=el('g',{});
+    regLine=el('line',{stroke:'var(--line)','stroke-width':3.2,'stroke-linecap':'round'});
+    regLab=el('text',{'font-size':17,'font-weight':700,fill:'var(--line)'});regLab.textContent='ŷ';
+    gPts=el('g',{});
+  }
+
+  // ---------- compute ----------
+  function compute(rv){
+    const s=Math.sqrt(D.SST), q=Math.sqrt(Math.max(0,1-rv*rv));
+    const y=D.z.map((zi,i)=>D.ybar+s*(rv*zi+q*D.e[i]));
+    const yb=mean(y), xb=D.xb;
+    const b1=D.x.reduce((acc,xi,i)=>acc+(xi-xb)*(y[i]-yb),0)/D.SSx;
+    const b0=yb-b1*xb;
+    const yh=D.x.map(xi=>b0+b1*xi);
+    const SST=y.reduce((a,v)=>a+(v-yb)**2,0);
+    const SSR=yh.reduce((a,v)=>a+(v-yb)**2,0);
+    const SSE=y.reduce((a,v,i)=>a+(v-yh[i])**2,0);
+    return {y,yh,yb,b0,b1,SST,SSR,SSE};
+  }
+
+  // ---------- render ----------
+  const fmt=(v,d=2)=>(Math.abs(v)<5e-10?0:v).toFixed(d);
+  function render(){
+    const c=compute(r);
+    // regression line
+    const x1=D.xmin+0.3,x2=D.xmax-0.3;
+    regLine.setAttribute('x1',sx(x1));regLine.setAttribute('y1',sy(c.b0+c.b1*x1));
+    regLine.setAttribute('x2',sx(x2));regLine.setAttribute('y2',sy(c.b0+c.b1*x2));
+    regLab.setAttribute('x',sx(x2)+6);regLab.setAttribute('y',sy(c.b0+c.b1*x2)+6);
+    // gaps
+    gGaps.innerHTML="";
+    const show={sst:tSST.checked,ssr:tSSR.checked,sse:tSSE.checked};
+    const off=(D.xmax-D.xmin)*0.013;
+    D.x.forEach((xi,i)=>{
+      const xx=xi;
+      if(show.sst) el('line',{x1:sx(xx-off),x2:sx(xx-off),y1:sy(c.y[i]),y2:sy(c.yb),stroke:'var(--sst)','stroke-width':4,'stroke-linecap':'round',opacity:.9},gGaps);
+      if(show.ssr) el('line',{x1:sx(xx),x2:sx(xx),y1:sy(c.yh[i]),y2:sy(c.yb),stroke:'var(--ssr)','stroke-width':4,'stroke-linecap':'round',opacity:.95},gGaps);
+      if(show.sse) el('line',{x1:sx(xx+off),x2:sx(xx+off),y1:sy(c.y[i]),y2:sy(c.yh[i]),stroke:'var(--sse)','stroke-width':4,'stroke-linecap':'round',opacity:.95},gGaps);
+    });
+    // points
+    gPts.innerHTML="";
+    D.x.forEach((xi,i)=>{
+      el('circle',{cx:sx(xi),cy:sy(c.y[i]),r:D.name==='stress'?9:7,fill:'var(--pt)',stroke:'#fff','stroke-width':2.2},gPts);
+    });
+    // readouts
+    vSST.textContent=fmt(c.SST);vSSR.textContent=fmt(c.SSR);vSSE.textContent=fmt(c.SSE);
+    const pR=c.SSR/c.SST*100, pE=100-pR;
+    bSSR.style.width=pR+'%';bSSE.style.width=pE+'%';
+    bSSR.textContent=pR>=9?('SSR '+pR.toFixed(0)+'%'):'';
+    bSSE.textContent=pE>=9?('SSE '+pE.toFixed(0)+'%'):'';
+    bSSTlab.textContent='SST = '+fmt(c.SST);
+    vR.textContent=fmt(r);vR2.textContent=fmt(r*r);
+    const atData=D.name==='stress'&&Math.abs(r-rData)<0.004;
+    const showR=revealed||atData;
+    rval.textContent=showR?('r = '+fmt(r)):'';
+    rbox.hidden=!showR; eqWrap.hidden=!revealed;
+    rIn.value=r;
+    const b1r=Math.abs(c.b1)<5e-4?0:c.b1; const b1s=b1r>=0?'+ '+fmt(b1r,3):'− '+fmt(Math.abs(b1r),3);
+    eqn.textContent='ŷ = '+fmt(c.b0,3)+' '+b1s+'x';
+    // callout
+    const r2=r*r;
+    let h,t;
+    if(r2<0.0004){h='SST = SSE';t='The line is flat at ȳ, so SSR = 0: knowing x does not improve the prediction at all. The best forecast for every point is just the mean.'+(revealed?' This is r = 0: no linear relationship.':' What relationship between x and y does this show?');}
+    else if(r2>0.9996){h='SST = SSR';t='Every point sits on the line, so SSE = 0: the model explains all of the variation in y.'+(revealed?(' This is r = '+(r>0?'+1':'−1')+': a perfect linear relationship. (Real business data almost never looks like this.)'):' What relationship between x and y does this show?');}
+    else if(atData){h='Our managers’ data: r = 0.88, r² = 0.77';t='Team size explains about 77% of the variation in stress (SSR = '+fmt(c.SSR)+' of SST = '+fmt(c.SST)+'). The other 23% (SSE = '+fmt(c.SSE)+') is what the model misses.'+' (The slides show 26.02 and 7.98 because ŷ was rounded first.)';}
+    else{h='The line explains '+(r2*100).toFixed(0)+'% of the variation';t='The tighter the points hug the line, the more of SST goes to SSR (green) and the less to SSE (orange). The total never changes.'+(revealed?' Here r = '+fmt(r)+'.':'');}
+    cH.textContent=h;cT.textContent=t;
+  }
+
+  // ---------- animation ----------
+  let anim=null, playing=false, playTimer=null;
+  function tweenTo(target,ms=1100){
+    return new Promise(res=>{
+      if(anim)cancelAnimationFrame(anim);
+      const r0=r,t0=performance.now();
+      const ease=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+      function step(now){
+        const u=Math.min(1,(now-t0)/ms);
+        r=r0+(target-r0)*ease(u); render();
+        if(u<1)anim=requestAnimationFrame(step); else {anim=null;res();}
+      }
+      anim=requestAnimationFrame(step);
+    });
+  }
+  const sleep=ms=>new Promise(res=>{playTimer=setTimeout(res,ms)});
+  async function play(){
+    if(playing){stop();return}
+    playing=true;playBtn.textContent='■ Stop';
+    const seq=[[0,1300,1600],[D.name==='stress'?rData:0.6,1500,1800],[1,1400,1800],[0,1700,1500],[-1,1700,1800],[D.name==='stress'?rData:0.6,1900,0]];
+    for(const [tgt,ms,hold] of seq){ if(!playing)return; await tweenTo(tgt,ms); if(!playing)return; if(hold) await sleep(hold); }
+    stop();
+  }
+  function stop(){playing=false;clearTimeout(playTimer);playBtn.textContent='▶ Play the story'}
+
+  // ---------- wiring ----------
+  const rIn=document.getElementById('r'), rval=document.getElementById('rval');
+  const vSST=document.getElementById('vSST'),vSSR=document.getElementById('vSSR'),vSSE=document.getElementById('vSSE');
+  const bSSR=document.getElementById('bSSR'),bSSE=document.getElementById('bSSE'),bSSTlab=document.getElementById('bSSTlab');
+  const vR=document.getElementById('vR'),vR2=document.getElementById('vR2'),cH=document.getElementById('cH'),cT=document.getElementById('cT'),eqn=document.getElementById('eqn');
+  const tSST=document.getElementById('tSST'),tSSR=document.getElementById('tSSR'),tSSE=document.getElementById('tSSE');
+  const playBtn=document.getElementById('play');
+  const rbox=document.getElementById('rbox'), eqWrap=document.getElementById('eqWrap');
+  rIn.addEventListener('input',()=>{stop();if(anim)cancelAnimationFrame(anim);r=+rIn.value;render()});
+  document.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>{
+    stop(); const v=b.dataset.r; tweenTo(v==='data'?(D.name==='stress'?rData:0.6):+v);
+  }));
+  playBtn.addEventListener('click',play);
+  const revealBtn=document.getElementById('reveal');
+  function toggleReveal(){revealed=!revealed;revealBtn.textContent=revealed?'🙈 Hide r':'👁 Reveal r';render();}
+  revealBtn.addEventListener('click',toggleReveal);
+  [tSST,tSSR,tSSE].forEach(t=>t.addEventListener('change',render));
+  const dsS=document.getElementById('dsStress'),dsB=document.getElementById('dsBig');
+  function setDS(d){stop();D=d;dsS.classList.toggle('on',d===STRESS);dsB.classList.toggle('on',d===BIG);
+    document.querySelector('[data-r="data"]').innerHTML=d===STRESS?'Our data <small>(r = 0.88)</small>':'In between';
+    drawStatic();render();}
+  dsS.addEventListener('click',()=>setDS(STRESS));dsB.addEventListener('click',()=>setDS(BIG));
+  document.addEventListener('keydown',e=>{
+    if(e.target.tagName==='INPUT'&&e.key!==' ')return;
+    if(e.key==='e'||e.key==='E'){stop();tweenTo(0)}
+    else if(e.key==='r'||e.key==='R'){stop();tweenTo(1)}
+    else if(e.key==='f'||e.key==='F'){stop();tweenTo(-1)}
+    else if(e.key==='v'||e.key==='V'){toggleReveal()}
+    else if(e.key==='d'||e.key==='D'){stop();tweenTo(D.name==='stress'?rData:0.6)}
+    else if(e.key===' '){e.preventDefault();play()}
+    else if(e.key==='ArrowRight'){stop();r=Math.min(1,r+0.05);render()}
+    else if(e.key==='ArrowLeft'){stop();r=Math.max(-1,r-0.05);render()}
+  });
+
+  drawStatic();render();
+})();
+</script>
+</body>
+</html>
