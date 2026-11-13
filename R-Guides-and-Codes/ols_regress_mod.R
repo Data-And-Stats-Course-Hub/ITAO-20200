@@ -11,8 +11,8 @@
 ### Required Packages: olsrr                                                 ###
 ###                                                                          ###
 ###                                                                          ###
-### Change Log        09/19/2025  Original (J. Akosa)                        ###
-###                   11/13/2025  Posted to GitHub; class check uses inherits() ###
+### Change Log        2025        Original (J. Akosa)                        ###
+###                   11/13/2026  Posted to GitHub; class check uses inherits() ###
 ###                                                                          ###
 ################################################################################
 
