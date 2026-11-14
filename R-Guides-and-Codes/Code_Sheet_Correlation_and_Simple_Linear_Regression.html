@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Code Sheet: Correlation and Simple Linear Regression (ITAO 20200)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: Georgia, serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+  h1 { font-size: 1.5rem; margin-bottom: .25rem; }
+  p.sub { color: #555; margin-top: 0; }
+  .bar { display: flex; gap: .75rem; align-items: center; margin: 1rem 0 .5rem; }
+  button { background: rgba(0,75,160,0.9); color: #fff; border: none; border-radius: 8px; padding: .5rem 1rem; font-weight: bold; cursor: pointer; }
+  button:hover { background: rgba(0,60,140,1); }
+  a.dl { font-size: .95rem; }
+  pre { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: .9rem; line-height: 1.4; white-space: pre; }
+  #msg { color: #1a7f37; font-size: .95rem; }
+</style>
+</head>
+<body>
+<h1>Code Sheet: Correlation and Simple Linear Regression</h1>
+<p class="sub">ITAO 20200: Statistical Inference in Business</p>
+<div class="bar">
+  <button id="copy">Copy all code</button>
+  <a class="dl" href="Code_Sheet_Correlation_and_Simple_Linear_Regression.R" download>Download as .R file</a>
+  <span id="msg"></span>
+</div>
+<p>Paste the code into a new R script (File &gt; New File &gt; R Script in RStudio) and run it from top to bottom.</p>
+<pre id="code">################################################################################
+#### Correlation and Simple Linear Regression                               ####
+#### ITAO 20200: Statistical Inference in Business                          ####
+####                                                                        ####
+#### Code sheet to go with the &quot;R: Correlation and Simple Linear            ####
+#### Regression&quot; guide. Run the lines in order from top to bottom.          ####
+####                                                                        ####
+#### Example: predicting the asking price of a house (Price) from the       ####
+#### number of bedrooms in that house (Bedrooms).                           ####
+################################################################################
+
+
+#===============================================================================
+# One-time setup: the olsrr package
+#===============================================================================
+# The regression output below needs the olsrr package. It is ALREADY installed
+# on the classroom computers, so you do not need to do anything there.
+#
+# On your OWN computer, run the install line ONCE. Remove the # at the start of
+# the line, run it, then put the # back (a package only needs to be installed
+# once per machine, but it must be loaded with library() every session).
+
+# install.packages(&quot;olsrr&quot;)
+
+
+#===============================================================================
+# Importing the data set
+#===============================================================================
+Housing &lt;- read.csv(&quot;https://mendoza-stats.s3.amazonaws.com/housingprices.csv&quot;)
+head(Housing, n = 5)   # first 5 rows
+tail(Housing, n = 5)   # last 5 rows
+
+
+#===============================================================================
+# Some Basic Descriptive Statistics (base R, no packages needed)
+#===============================================================================
+sapply(Housing[, c(&quot;Price&quot;, &quot;Bedrooms&quot;)],   # the variables we want to describe
+       function(x) c(n = length(x),         # sample size
+                     mean = mean(x),        # sample mean
+                     sd = sd(x),            # sample standard deviation
+                     min = min(x),          # minimum
+                     max = max(x)))         # maximum
+
+
+#===============================================================================
+# Scatter plot of Asking Price on Number of Bedrooms
+#===============================================================================
+plot(x = Housing$Bedrooms,                         # our x variable
+     y = Housing$Price,                            # the y variable
+     xlab = &quot;Number of Bedrooms&quot;,                  # label the x-axis
+     ylab = &quot;Asking Price&quot;,                        # label the y-axis
+     main = &quot;Asking Price and Number of Bedrooms&quot;) # scatter diagram title
+
+
+#===============================================================================
+# Correlation and Test for Correlation
+#===============================================================================
+# cor_matrix() is a course function written in base R. It prints the
+# correlation matrix, the sample size, and the p-values for H0: rho = 0.
+#
+# IMPORTANT: the source() line loads the function from the course website and
+# MUST be run BEFORE the cor_matrix() line (an internet connection is required).
+# If you skip it, R will say: could not find function &quot;cor_matrix&quot;.
+
+source(&quot;https://data-and-stats-course-hub.github.io/ITAO-20200/R-Guides-and-Codes/cor_matrix.R&quot;)
+
+cor_matrix(Housing[, c(&quot;Price&quot;, &quot;Bedrooms&quot;)])   # a table of x and y observations
+
+# To test just one pair of variables (also gives t, df, and a 95% CI for rho):
+cor.test(Housing$Price, Housing$Bedrooms)
+
+
+#===============================================================================
+# Simple Linear Regression
+#===============================================================================
+
+# Fit the regression model and save it in an object
+Housing_model &lt;- lm(Price ~ Bedrooms, # Linear regression formula: y ~ x
+                    data = Housing)   # Name of the dataset
+
+# ols_regress_mod() is the course version of olsrr&#x27;s ols_regress(). It corrects
+# the MSE and RMSE in the Model Summary so they match the ANOVA table.
+#
+# IMPORTANT: BOTH the library() line AND the source() line MUST be run BEFORE
+# the ols_regress_mod() line, in this order:
+#   1. library(olsrr)        loads the olsrr package (install it first if needed;
+#                            see the setup section at the top of this sheet)
+#   2. source(...)           loads ols_regress_mod() from the course website
+#   3. ols_regress_mod(...)  prints the Model Summary, ANOVA table, and
+#                            Parameter Estimates for your saved model
+
+library(olsrr)
+
+source(&quot;https://data-and-stats-course-hub.github.io/ITAO-20200/R-Guides-and-Codes/ols_regress_mod.R&quot;)
+
+ols_regress_mod(Housing_model) # Use the name of your saved model as your input
+
+
+#===============================================================================
+# Practice on Your Own: Price predicted from SqrFoot
+#===============================================================================
+# Repeat the steps above with SqrFoot as the x variable. The source() lines do
+# not need to be run again in the same R session.
+#
+# plot(x = Housing$SqrFoot, y = Housing$Price,
+#      xlab = &quot;Square Footage&quot;, ylab = &quot;Asking Price&quot;,
+#      main = &quot;Asking Price and Square Footage&quot;)
+#
+# cor_matrix(Housing[, c(&quot;Price&quot;, &quot;SqrFoot&quot;)])
+#
+# SqrFoot_model &lt;- lm(Price ~ SqrFoot, data = Housing)
+# ols_regress_mod(SqrFoot_model)
+</pre>
+<script>
+document.getElementById('copy').addEventListener('click', function () {
+  var text = document.getElementById('code').textContent;
+  var msg = document.getElementById('msg');
+  function done() { msg.textContent = 'Copied to clipboard.'; setTimeout(function () { msg.textContent = ''; }, 3000); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, function () { msg.textContent = 'Select the code and press Ctrl+C / Cmd+C.'; });
+  } else {
+    var r = document.createRange(); r.selectNodeContents(document.getElementById('code'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    try { document.execCommand('copy'); done(); } catch (e) { msg.textContent = 'Press Ctrl+C / Cmd+C to copy.'; }
+  }
+});
+</script>
+</body>
+</html>
